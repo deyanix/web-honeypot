@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Honeypot</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='100px' width='100px'><text transform='translate(20, 100) rotate(-45)' fill='rgb(235, 235, 235)' font-size='20'>honeypot</text></svg>");
+        }
+    </style>
+</head>
+<body>
+    <h1 style="color: #0e66ae">Facebook</h1>
+    <form method="POST">
+        <table>
+            <tr>
+                <td>
+                    <label for="form-name">Nazwa użytkownika</label>
+                </td>
+                <td>
+                    <input type="text" name="name" id="form-name" autocomplete="off"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="form-password">Hasło</label>
+                </td>
+                <td>
+                    <input type="password" name="password" id="form-password" autocomplete="off"/>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <button type="submit">Zaloguj</button>
+                </td>
+            </tr>
+            {{#if dirty}}
+                <tr style="color: #97060b">
+                    <td></td>
+                    <td>Niepoprawna nazwa użytkownika lub hasło</td>
+                </tr>
+            {{/if}}
+        </table>
+    </form>
+</body>
+</html>
