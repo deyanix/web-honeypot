@@ -25,6 +25,7 @@ const mongo = new MongoClient(process.env.HONEYPOT_MONGO_URL);
 // Middleware do przechwytywania danych
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.static(`forms/${process.env.HONEYPOT_TYPE}`));
 
 // Funkcja do klasyfikacji haseł
 const classifyPassword = (password) => {
@@ -56,7 +57,7 @@ app.get('/metrics', async (req, res) => {
 
 // Obsługa formularza
 const template = Handlebars.compile(
-    fs.readFileSync('./forms/standard/index.html.hbs', 'utf8')
+    fs.readFileSync(`./forms/${process.env.HONEYPOT_TYPE}/index.html.hbs`, 'utf8')
 );
 
 app.get('/', (req, res) => {
