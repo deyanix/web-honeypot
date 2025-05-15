@@ -25,7 +25,7 @@ const mongo = new MongoClient(process.env.HONEYPOT_MONGO_URL);
 // Middleware do przechwytywania danych
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(express.static(`forms/${process.env.HONEYPOT_TYPE}`));
+app.use(express.static(`forms/${process.env.HONEYPOT_TYPE}/public`));
 
 // Funkcja do klasyfikacji haseł
 const classifyPassword = (password) => {
@@ -56,11 +56,11 @@ app.get('/metrics', async (req, res) => {
 });*/
 
 // Obsługa formularza
-const template = Handlebars.compile(
-    fs.readFileSync(`./forms/${process.env.HONEYPOT_TYPE}/index.html.hbs`, 'utf8')
-);
-
 app.get('/', (req, res) => {
+    const template = Handlebars.compile(
+        fs.readFileSync(`./forms/${process.env.HONEYPOT_TYPE}/index.html.hbs`, 'utf8')
+    );
+
     res.send(template({ dirty: false }));
 });
 
@@ -107,8 +107,10 @@ app.post('/', async (req, res) => {
                 password_type: passwordType,
                 timestamp: new Date()
             });
-
-        res.send(template({ dirty: true }));
+        const template = Handlebars.compile(
+            fs.readFileSync(`./forms/${process.env.HONEYPOT_TYPE}/index.html.hbs`, 'utf8')
+        );
+        res.send(template({ dirty: true, username }));
     } catch (err) {
         console.error('Error processing request:', err);
         res.status(500).send('Internal Server Error');

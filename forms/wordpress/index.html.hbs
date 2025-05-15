@@ -1,120 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Log In ‹ My WordPress — WordPress</title>
-    <style>
-        body {
-            background: #f1f1f1;
-            font-family: "Open Sans", sans-serif;
-            margin: 0;
-            padding: 0;
-        }
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Log In ‹ MyOffice — WordPress</title>
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    <link rel="stylesheet" id="forms-css" href="/wp-admin/css/forms.css" media="all">
+    <link rel="stylesheet" id="login-css" href="/wp-admin/css/login.css" media="all">
+    <link rel="stylesheet" id="forms-css" href="/wp-includes/css/buttons.css" media="all">
+    <link rel="stylesheet" id="forms-css" href="/wp-includes/css/dashicons.css" media="all">
 
-        * {
-            box-sizing: border-box;
-        }
-
-        .login {
-            width: 320px;
-            margin: 80px auto;
-            padding: 26px 24px 46px;
-            background: #fff;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.13);
-            border: 1px solid #c3c4c7;
-        }
-
-        .login h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .login img {
-            display: block;
-            margin: 0 auto 20px;
-            width: 20px;
-            height: 20px;
-        }
-
-        .login form input[type="text"],
-        .login form input[type="password"] {
-            width: 100%;
-            padding: 8px 10px;
-            margin-bottom: 16px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-
-        .login form .remember-me {
-            display: flex;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .login form .remember-me input {
-            margin-right: 6px;
-        }
-
-        .login form input[type="submit"] {
-            width: 100%;
-            background: #2271b1;
-            border: none;
-            color: #fff;
-            padding: 10px;
-            font-size: 14px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .login form input[type="submit"]:hover {
-            background: #135e96;
-        }
-
-        .login .links {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 13px;
-        }
-
-        .login .links a {
-            color: #2271b1;
-            text-decoration: none;
-        }
-
-        .login .links a:hover {
-            text-decoration: underline;
-        }
-
-        .login .back {
-            margin-top: 10px;
-            text-align: center;
-            font-size: 12px;
-            color: #50575e;
-        }
-    </style>
 </head>
-<body>
-<img src="https://s.w.org/images/wmark.png" alt="WordPress Logo" style="display: block; margin: 10px auto 20px; width: 64px; height: auto;">
-<div class="login">
-    <form method="post">
-        <input type="text" name="username" placeholder="Username or Email Address" required />
-        <input type="password" name="password" placeholder="Password" required />
+<body class="login js login-action-login wp-core-ui  locale-pl-pl">
+    <div id="login">
+        <h1><a href="https://wordpress.org/">Powered by WordPress</a></h1>
 
-        <div class="remember-me">
-            <input type="checkbox" name="rememberme" id="rememberme" value="forever" />
-            <label for="rememberme">Remember Me</label>
+        {{#if dirty}}
+        <div id="login_error">
+            <strong>Error</strong>:
+            {{#if username}}
+                The username <strong>{{username}}</strong> is not registered on this site.
+                If you are unsure of your username, try your email address instead.<br>
+            {{else}}
+                The username field is empty.
+            {{/if}}
         </div>
+        {{/if}}
 
-        <input type="submit" value="Log In" />
-    </form>
-    <div class="links">
-        <a href="#">Lost your password?</a>
+        <form name="loginform" id="loginform" method="post">
+            <p>
+                <label for="user_login">Username or Email Address</label>
+                <input type="text" name="username" id="user_login" class="input" value="" size="20" autocapitalize="off">
+            </p>
+
+            <div class="user-pass-wrap">
+                <label for="user_pass">Password</label>
+                <div class="wp-pwd">
+                    <input type="password" name="password" id="user_pass" class="input password-input" value="" size="20">
+                    <button type="button" class="button button-secondary wp-hide-pw hide-if-no-js" aria-label="Show password">
+                        <span class="dashicons dashicons-visibility" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+            <p class="forgetmenot">
+                <input name="rememberme" type="checkbox" id="rememberme" value="forever">
+                <label for="rememberme">Remember Me</label>
+            </p>
+            <p class="submit">
+                <input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large"
+                       value="Log In">
+                <input type="hidden" name="redirect_to" value="/wp-admin/">
+                <input type="hidden" name="testcookie" value="1">
+            </p>
+        </form>
+
+        <p id="nav">
+            <a href="#">Lost your password?</a>
+        </p>
+        <p id="backtoblog">
+            <a href="#">← Go to MyOffice</a>
+        </p>
     </div>
-    <div class="back">
-        ← <a href="#">Go to My Website</a>
-    </div>
-</div>
 </body>
 </html>
