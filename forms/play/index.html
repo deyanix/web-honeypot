@@ -42,10 +42,16 @@
       margin-bottom: 30px;
     }
 
-    label {
-      display: block;
+    .input-group {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .input-group label {
       font-size: 16px;
-      margin-bottom: 5px;
+      white-space: nowrap;
     }
 
     input[type="password"] {
@@ -56,18 +62,20 @@
       border-radius: 4px;
     }
 
-    .input-group {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px; /* odstęp między label a inputem */
-    }       
-
-    .input-group label {
-    font-size: 16px;
-    white-space: nowrap;
+    .error-message {
+      color: #d32f2f;
+      font-size: 14px;
+      margin-top: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      display: none; /* ukryty domyślnie */
     }
 
+    .error-icon {
+      font-size: 18px;
+    }
 
     button {
       margin-top: 20px;
@@ -91,30 +99,34 @@
     <p>Zaloguj się, aby uzyskać dostęp do ustawień routera.</p>
     
     <form id="loginForm">
-  <div class="input-group">
-    <label for="password">Hasło</label>
-    <input type="password" id="password" name="password" required>
-  </div>
-  <br>
-  <button type="submit">Zaloguj się</button>
-</form>
+      <div class="input-group">
+        <label for="password">Hasło</label>
+        <input type="password" id="password" name="password" required>
+      </div>
 
+      <div id="errorMessage" class="error-message">
+        <span class="error-icon">⚠️</span>
+        Podane hasło jest niepoprawne.
+      </div>
+
+      <br>
+      <button type="submit">Zaloguj się</button>
+    </form>
   </div>
 
   <script>
-  document.getElementById('loginForm').addEventListener('submit', async function (e) {
-    e.preventDefault();
-    const password = document.getElementById('password').value;
+    document.getElementById("loginForm").addEventListener("submit", function (e) {
+      e.preventDefault();
 
-    await fetch('', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password })
+      const password = document.getElementById("password").value;
+
+      if (password !== "admin") {
+        document.getElementById("errorMessage").style.display = "flex";
+      } else {
+        document.getElementById("errorMessage").style.display = "none";
+        alert("Zalogowano!");
+      }
     });
-
-    alert("Podane hasło jest błędne.");
-  });
-</script>
-
+  </script>
 </body>
 </html>
