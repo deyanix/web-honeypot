@@ -9,6 +9,7 @@ services:
       HONEYPOT_PORT: 80
       HONEYPOT_MONGO_URL: "mongodb://root:secret@mongo:27017/dbname?authSource=admin"
       HONEYPOT_MONGO_COLLECTION: "honeypot_data"
+      HONEYPOT_TYPE: "wordpress"
     depends_on:
       - mongo
     networks:

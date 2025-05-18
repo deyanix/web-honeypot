@@ -6,6 +6,8 @@ const { MongoClient } = require('mongodb');
 const client = require('prom-client');
 const crypto = require('crypto');
 
+const honeypotType = process.env.HONEYPOT_TYPE ?? 'standard';
+
 // Inicjalizacja metryk
 const register = new client.Registry();
 client.collectDefaultMetrics({ register });
@@ -25,7 +27,7 @@ const mongo = new MongoClient(process.env.HONEYPOT_MONGO_URL);
 // Middleware do przechwytywania danych
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(express.static(`forms/${process.env.HONEYPOT_TYPE}/public`));
+app.use(express.static(`forms/${honeypotType}/public`));
 
 // Funkcja do klasyfikacji haseł
 const classifyPassword = (password) => {
@@ -56,15 +58,17 @@ app.get('/metrics', async (req, res) => {
 });*/
 
 // Obsługa formularza
-app.get('/', (req, res) => {
+const route = honeypotType !== 'wordpress' ? '/' : '/wp-admin';
+
+app.get(route, (req, res) => {
     const template = Handlebars.compile(
-        fs.readFileSync(`./forms/${process.env.HONEYPOT_TYPE}/index.html.hbs`, 'utf8')
+        fs.readFileSync(`./forms/${honeypotType}/index.html.hbs`, 'utf8')
     );
 
     res.send(template({ dirty: false }));
 });
 
-app.post('/', async (req, res) => {
+app.post(route, async (req, res) => {
     try {
         const { username, password } = req.body;
         const requestId = crypto.randomUUID();
@@ -108,7 +112,7 @@ app.post('/', async (req, res) => {
                 timestamp: new Date()
             });
         const template = Handlebars.compile(
-            fs.readFileSync(`./forms/${process.env.HONEYPOT_TYPE}/index.html.hbs`, 'utf8')
+            fs.readFileSync(`./forms/${honeypotType}/index.html.hbs`, 'utf8')
         );
         res.send(template({ dirty: true, username }));
     } catch (err) {

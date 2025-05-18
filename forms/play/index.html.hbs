@@ -70,7 +70,6 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
-      display: none; /* ukryty domyślnie */
     }
 
     .error-icon {
@@ -91,42 +90,29 @@
 </head>
 <body>
   <div class="logo">
-    <img src="img/play_logo.png">
+    <img src="/img/play_logo.png">
   </div>
 
   <div class="container">
     <h1>Dzień dobry</h1>
     <p>Zaloguj się, aby uzyskać dostęp do ustawień routera.</p>
-    
-    <form id="loginForm">
+
+    <form id="loginForm" method="POST">
       <div class="input-group">
         <label for="password">Hasło</label>
         <input type="password" id="password" name="password" required>
       </div>
 
+    {{#if dirty}}
       <div id="errorMessage" class="error-message">
         <span class="error-icon">⚠️</span>
         Podane hasło jest niepoprawne.
       </div>
+    {{/if}}
 
       <br>
       <button type="submit">Zaloguj się</button>
     </form>
   </div>
-
-  <script>
-    document.getElementById("loginForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-
-      const password = document.getElementById("password").value;
-
-      if (password !== "admin") {
-        document.getElementById("errorMessage").style.display = "flex";
-      } else {
-        document.getElementById("errorMessage").style.display = "none";
-        alert("Zalogowano!");
-      }
-    });
-  </script>
 </body>
 </html>
