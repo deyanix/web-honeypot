@@ -1,18 +1,67 @@
 version: '3.8'
 
 services:
-  web-honeypot:
+  wordpress-honeypot:
     build: .
     ports:
-      - "80:80"
+      - "8080:80"
     environment:
+      HONEYPOT_TYPE: wordpress
       HONEYPOT_PORT: 80
       HONEYPOT_MONGO_URL: "mongodb://root:secret@mongo:27017/dbname?authSource=admin"
       HONEYPOT_MONGO_COLLECTION: "honeypot_data"
     depends_on:
       - mongo
     volumes:
-      - ./logs:/app/logs
+      - ./logs/wordpress:/app/logs
+    logging:
+      driver: "json-file"
+
+  play-honeypot:
+    build: .
+    ports:
+      - "8081:80"
+    environment:
+      HONEYPOT_TYPE: play
+      HONEYPOT_PORT: 80
+      HONEYPOT_MONGO_URL: "mongodb://root:secret@mongo:27017/dbname?authSource=admin"
+      HONEYPOT_MONGO_COLLECTION: "honeypot_data"
+    depends_on:
+      - mongo
+    volumes:
+      - ./logs/play:/app/logs
+    logging:
+      driver: "json-file"
+
+  phpmyadmin-honeypot:
+    build: .
+    ports:
+      - "8082:80"
+    environment:
+      HONEYPOT_TYPE: phpmyadmin
+      HONEYPOT_PORT: 80
+      HONEYPOT_MONGO_URL: "mongodb://root:secret@mongo:27017/dbname?authSource=admin"
+      HONEYPOT_MONGO_COLLECTION: "honeypot_data"
+    depends_on:
+      - mongo
+    volumes:
+      - ./logs/phpmyadmin:/app/logs
+    logging:
+      driver: "json-file"
+
+  mikrotik-honeypot:
+    build: .
+    ports:
+      - "8083:80"
+    environment:
+      HONEYPOT_TYPE: mikrotik
+      HONEYPOT_PORT: 80
+      HONEYPOT_MONGO_URL: "mongodb://root:secret@mongo:27017/dbname?authSource=admin"
+      HONEYPOT_MONGO_COLLECTION: "honeypot_data"
+    depends_on:
+      - mongo
+    volumes:
+      - ./logs/mikrotik:/app/logs
     logging:
       driver: "json-file"
 
@@ -33,7 +82,7 @@ services:
   promtail:
     image: grafana/promtail:2.9.0
     volumes:
-      - ./logs:/var/log
+      - ./logs:/var/log/honeypots
       - ./promtail-config.yml:/etc/promtail/config.yml
 
   grafana:

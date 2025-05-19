@@ -1,0 +1,3 @@
+timestamp="2025-05-19T20:32:44.531Z" username="phpmyadmin_u" password="phpmyadmin_p" passwordLength="12" passwordType="complex" ip="172.30.0.1" country="PL"
+timestamp="2025-05-19T20:43:21.859Z" username="admin" password="qwerty" passwordLength="6" passwordType="letters_only" ip="172.30.0.1" country="CH"
+timestamp="2025-05-19T20:43:34.335Z" username="root" password="qwert" passwordLength="5" passwordType="letters_only" ip="172.30.0.1" country="RU"

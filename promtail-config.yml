@@ -9,10 +9,33 @@ clients:
   - url: http://loki:3100/loki/api/v1/push
 
 scrape_configs:
-  - job_name: honeypot_logs
+  - job_name: honeypot-logs
+
     static_configs:
       - targets:
           - localhost
         labels:
           job: honeypot
-          __path__: /var/log/honeypot.log
+          honeypot_type: wordpress
+          __path__: /var/log/honeypots/wordpress/*.log
+
+      - targets:
+          - localhost
+        labels:
+          job: honeypot
+          honeypot_type: play
+          __path__: /var/log/honeypots/play/*.log
+
+      - targets:
+          - localhost
+        labels:
+          job: honeypot
+          honeypot_type: phpmyadmin
+          __path__: /var/log/honeypots/phpmyadmin/*.log
+
+      - targets:
+          - localhost
+        labels:
+          job: honeypot
+          honeypot_type: mikrotik
+          __path__: /var/log/honeypots/mikrotik/*.log

@@ -1,0 +1,6 @@
+timestamp="2025-05-19T20:32:00.017Z" username="undefined" password="play_p" passwordLength="6" passwordType="complex" ip="172.30.0.1" country="RU"
+timestamp="2025-05-19T20:41:10.343Z" username="undefined" password="test" passwordLength="4" passwordType="letters_only" ip="172.30.0.1" country="RU"
+timestamp="2025-05-19T20:41:14.776Z" username="undefined" password="test3" passwordLength="5" passwordType="alphanumeric" ip="172.30.0.1" country="RU"
+timestamp="2025-05-19T20:41:18.610Z" username="undefined" password="password" passwordLength="8" passwordType="letters_only" ip="172.30.0.1" country="AF"
+timestamp="2025-05-19T20:41:31.893Z" username="undefined" password="qwerty" passwordLength="6" passwordType="letters_only" ip="172.30.0.1" country="UA"
+timestamp="2025-05-19T20:41:35.935Z" username="undefined" password="qwerty123" passwordLength="9" passwordType="alphanumeric" ip="172.30.0.1" country="CN"
