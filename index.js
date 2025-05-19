@@ -3,23 +3,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const Handlebars = require('handlebars');
 const { MongoClient } = require('mongodb');
-const client = require('prom-client');
-const crypto = require('crypto');
+const geoip = require('geoip-lite');
 
 const honeypotType = process.env.HONEYPOT_TYPE ?? 'standard';
-
-// Inicjalizacja metryk
-const register = new client.Registry();
-client.collectDefaultMetrics({ register });
-
-const loginAttempts = new client.Counter({
-    name: 'honeypot_login_attempts',
-    help: 'Total login attempts',
-    labelNames: ['ip', 'username', 'password', 'password_length', 'password_type', 'request_id', 'timestamp'] // Bezpieczne etykiety
-});
-
-// Rejestracja niestandardowej metryki
-register.registerMetric(loginAttempts);
 
 const app = express();
 const mongo = new MongoClient(process.env.HONEYPOT_MONGO_URL);
@@ -32,30 +18,11 @@ app.use(express.static(`forms/${honeypotType}/public`));
 // Funkcja do klasyfikacji haseł
 const classifyPassword = (password) => {
     if (!password) return 'empty';
-    if (password.length < 4) return 'very_short';
-    if (password.length < 8) return 'short';
     if (/^[a-z]+$/i.test(password)) return 'letters_only';
     if (/^[0-9]+$/.test(password)) return 'numbers_only';
     if (/^[a-z0-9]+$/i.test(password)) return 'alphanumeric';
     return 'complex';
 };
-
-// Endpoint metrics musi być pierwszy!
-app.get('/metrics', async (req, res) => {
-    try {
-        res.set('Content-Type', register.contentType);
-        res.end(await register.metrics());
-    } catch (err) {
-        console.error('Metrics endpoint error:', err);
-        res.status(500).send('Internal Server Error');
-    }
-});
-
-// Metrics endpoint
-/*app.get('/metrics', async (req, res) => {
-    res.set('Content-Type', register.contentType);
-    res.end(await register.metrics());
-});*/
 
 // Obsługa formularza
 const route = honeypotType !== 'wordpress' ? '/' : '/wp-admin';
@@ -71,33 +38,16 @@ app.get(route, (req, res) => {
 app.post(route, async (req, res) => {
     try {
         const { username, password } = req.body;
-        const requestId = crypto.randomUUID();
         const timestamp = new Date().toISOString();
         const passwordLength = password ? password.length : 0;
         const passwordType = classifyPassword(password);
-        const passwordSample = password
-            ? crypto.createHash('sha256').update(password).digest('hex').substring(0, 6)
-            : 'empty';
+        const publicIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
-        console.log(`Login attempt from ${req.ip}:`, {
-            username,
-            password,
-            password_length: passwordLength,
-            password_type: passwordType,
-            request_id: requestId,
-            timestamp: timestamp
-        });
+        const geo = geoip.lookup(publicIp.replace(/::ffff:/, ''));
+        const country = geo && geo.country ? geo.country : "none";
 
-        // Aktualizacja metryki z bezpiecznymi danymi
-        loginAttempts.labels({
-            ip: req.ip.replace(/::ffff:/, ''),
-            username: username || 'unknown',
-            password: password,
-            password_length: passwordLength.toString(),
-            password_type: passwordType,
-            request_id: requestId,
-            timestamp: timestamp
-        }).inc();
+        const logEntry = `timestamp="${new Date().toISOString()}" username="${username}" password="${password}" passwordLength="${passwordLength}" passwordType="${passwordType}" ip="${publicIp.replace(/::ffff:/, '')}" country="${country}"\n`;
+        fs.appendFileSync('./logs/honeypot.log', logEntry);
 
         // Zapis do MongoDB (z pełnymi danymi)
         await mongo.db()
@@ -105,8 +55,7 @@ app.post(route, async (req, res) => {
             .insertOne({
                 ip: req.ip,
                 username: username,
-                password: password, // Hasło w plaintext tylko w bazie
-                password_hash: passwordSample, // Skrót dla bezpieczeństwa
+                password: password,
                 password_length: passwordLength,
                 password_type: passwordType,
                 timestamp: new Date()
