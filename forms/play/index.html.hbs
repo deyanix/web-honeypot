@@ -89,6 +89,40 @@
   </style>
 </head>
 <body>
+  <div class="honeypot-warning">
+        <strong>Uwaga! To nie jest prawdziwa strona logowania.</strong><br>
+        Ta strona została przygotowana wyłącznie do celów badawczych – testujemy mechanizmy ochrony przed nieuprawnionym dostępem do systemów teleinformatycznych (tzw. honeypot).<br><br>
+        Podane dane (np. login/hasło) są rejestrowane wyłącznie w celu analizy bezpieczeństwa, nie będą nigdzie wykorzystywane, ani udostępniane.<br><br>
+        <em>Nie kontynuuj, jeśli nie wyrażasz zgody na udział w tym eksperymencie.</em>
+    </div>
+
+    <style>
+    .honeypot-warning {
+        background-color: #fff3cd;
+        border: 1px solid #ffeeba;
+        color: #856404;
+        padding: 15px 20px;
+        max-width: 600px;
+        margin: 0 auto 10px;
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        border-radius: 5px;
+        box-shadow: 0 0 8px rgba(255, 193, 7, 0.3);
+        text-align: center;
+    }
+    .honeypot-warning strong {
+        font-size: 18px;
+    }
+    .honeypot-warning em {
+        font-style: normal;
+        font-weight: bold;
+    }
+    @media screen and (min-width: 576px){
+        .honeypot-warning {
+            margin: 20px auto;
+        }
+    }
+    </style>
   <div class="logo">
     <img src="/img/play_logo.png">
   </div>
